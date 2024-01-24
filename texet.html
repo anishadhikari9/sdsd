@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    /* Your existing styles... */
+
+    /* New styles for message space */
+    #messageSpace {
+      display: inline-block;
+      width: 15px;
+    }
+
+    /* Three dots styling */
+    #messageSpace::before {
+      content: '...';
+      font-size: 20px;
+      color: #333; /* Adjust color as needed */
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Booking your place for your dinner!</h1>
+  <label for="name">Name:</label>
+  <input type="text" id="name" size="22" oninput="validateName()">
+  <div id="nameError" style="color: red;"></div>
+
+  <label for="phone">Phone Number</label>
+  <input type="text" id="phone" size="22" oninput="validatePhone()">
+  <div id="phoneError" style="color: red;"></div><br>
+
+  <br>
+  <h2>Select a time</h2>
+  <!-- Use the same name for the radio buttons in a group -->
+  <input type="radio" id="first" name="seating" value="5" checked>
+  <label for="first">5:00</label><br>
+  <input type="radio" id="second" name="seating" value="6">
+  <label for="second">6:00</label><br>
+  <input type="radio" id="third" name="seating" value="7">
+  <label for="third">7:00</label><br>
+  <input type="radio" id="fourth" name="seating" value="8">
+  <label for="fourth">8:00</label><br>
+  <br>
+  <h2>What would you like to have with us?</h2>
+  <input type="checkbox" id="starters" name="course" value="starters">
+  <label for="starters">Starters</label><br>
+  <input type="checkbox" id="Main" name="course" value="main">
+  <label for="Main">Main Course</label><br>
+  <input type="checkbox" id="dessert" name="course" value="dessert">
+  <label for="dessert">Dessert</label><br>
+  <input type="checkbox" id="drinks" name="course" value="drinks">
+  <label for="drinks">Drinks</label><br>
+  <!-- Set type="button" to prevent unintentional form submission -->
+  <button onclick="submit()" id="submit" type="button" disabled>
+    Submit
+  </button>
+  <div id="messageSpace"></div> <!-- Message space for displaying messages -->
+  <div id="errorContainer" style="color: red;"></div>
+  <div id="resultMessage" style="color: blue;"></div>
+
+  <script>
+    function validateName() {
+      let nameInput = document.getElementById('name');
+      let nameError = document.getElementById('nameError');
+      let nameRegex = /^[a-zA-Z]+ [a-zA-Z]+$/;
+
+      if (nameInput.value.trim() === '') {
+        nameError.textContent = 'Error: Name is empty.';
+        nameInput.style.borderColor = 'red';
+      } else if (!nameRegex.test(nameInput.value)) {
+        nameError.textContent = 'Error: Please enter both first and last names.';
+        nameInput.style.borderColor = 'red';
+      } else {
+        nameError.textContent = '';
+        nameInput.style.borderColor = 'white';
+        enableSubmit();
+      }
+    }
+
+    function validatePhone() {
+      let phoneInput = document.getElementById('phone');
+      let phoneError = document.getElementById('phoneError');
+      let phoneRegex = /^[0-9]/;
+
+      if (phoneInput.value.trim() === '') {
+        phoneError.textContent = 'Error: Phone number is empty.';
+        phoneInput.style.borderColor = 'red';
+      } else if (phoneInput.value.length !== 6 || !phoneRegex.test(phoneInput.value.charAt(0))) {
+        phoneError.textContent = 'Error: Phone numbers must be 6 characters long and start with a number.';
+        phoneInput.style.borderColor = 'red';
+      } else {
+        phoneError.textContent = '';
+        phoneInput.style.borderColor = 'white';
+        enableSubmit();
+      }
+    }
+
+    function enableSubmit() {
+      let nameInput = document.getElementById('name');
+      let phoneInput = document.getElementById('phone');
+      let submitButton = document.getElementById('submit');
+
+      if (nameInput.style.borderColor === 'white' && phoneInput.style.borderColor === 'white') {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    }
+
+    function submit() {
+      let nameInput = document.getElementById('name');
+      let phoneInput = document.getElementById('phone');
+      let resultMessage = document.getElementById('resultMessage');
+      let errorContainer = document.getElementById('errorContainer');
+      let messageSpace = document.getElementById('messageSpace');
+
+      // Run validation functions
+      validateName();
+      validatePhone();
+
+      // Check if there are no validation errors
+      if (nameInput.style.borderColor === 'white' && phoneInput.style.borderColor === 'white') {
+        resultMessage.textContent = 'Form submitted successfully!';
+        resultMessage.style.color = 'green';
+        errorContainer.textContent = ''; // Clear any previous error messages
+      } else {
+        resultMessage.textContent = '';
+        errorContainer.textContent = 'Please fix the errors above before submitting.';
+      }
+
+      // Show three dots as an indication of space for messages
+      messageSpace.style.visibility = 'visible';
+    }
+  </script>
+</body>
+
+</html>
